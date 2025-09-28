@@ -16,6 +16,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from indexing.indexer import indexPage
+from serving.pageRank import compute_page_rank
 
 
 
@@ -173,6 +174,7 @@ def crawl(args):
 def crawl_bot():
     startingUrls = [
         'https://en.wikipedia.org/wiki/Google',
+        'https://www.bbc.com/news'
     ]
     
     urlsToCrawl = Queue()
@@ -181,7 +183,7 @@ def crawl_bot():
         urlsToCrawl.put(seedUrl)
 
     visitedUrls = set()
-    CRAWL_LIMIT = 10
+    CRAWL_LIMIT = 100
     crawlCount = [0]
     lock = threading.Lock()
     stopCrawl = threading.Event()
@@ -190,6 +192,9 @@ def crawl_bot():
     index = {}
     webpageInfo = {}
     webpageIDCounter = [0]
+
+    # pageRank section
+    pageRankGraph = {}
 
     # Start concurrent crawling w ThreadPoolExecutor
     NUM_WORKERS = 50
@@ -203,6 +208,7 @@ def crawl_bot():
         'index' : index,
         'webpageInfo' : webpageInfo,
         'webpageIDCounter' : webpageIDCounter,
+        'pageRankGraph' : pageRankGraph,
         'stopCrawl' : stopCrawl
     }
 
@@ -210,24 +216,31 @@ def crawl_bot():
     with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         for _ in range(NUM_WORKERS):
             executor.submit(crawl, args)
+
+    # pageRankScores = compute_page_rank(pageRankGraph)
     
     # Write index data on CSV
-    with open('invertedIndex.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    with open('crawler/csv/invertedIndex.csv', 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['word', 'docIDs']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for word, docIDs in index.items():
             writer.writerow({'word': word, 'docIDs': list(docIDs)})
         
-        
-        """
-        print('')
-        print('All URLs have been crawled.')
-        print(f'CRAWL finished in: {round(time.time() - start, 3)} - CRAWLED: {crawlCount}')
-        """
-
-
-    # Indexing part - TODO Decidere se salvare i dati su DB o excel
+    # Write page data on CSV
+    with open('crawler/csv/pageInfo.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['docID', 'url', 'title', 'description', 'pageRank']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for docID, info in webpageInfo.items():
+            writer.writerow({
+                'docID': docID,
+                'url': info['url'],
+                'title': info['title'],
+                'description': info['description'],
+                'pageRank': 1
+                #'pageRank': pagerankScores.get(info['url'], 0)    >>> this section is for page scoring
+            })
 
 
 
