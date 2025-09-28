@@ -1,9 +1,8 @@
-Puzza un pò ma per ora funziona
-
-NLTK: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
+# Puzza un pò ma per ora funziona
 
 
 
+===
 DOC
 
 Git repo progetto: https://github.com/The-CodingSloth/sloth-search/blob/main/search/crawling/advanced_crawler.py
@@ -16,3 +15,8 @@ NLTK doc: https://www.nltk.org/howto/corpus.html#sample-usage-for-corpus
 
 home wiki: https://it.wikipedia.org/wiki/Pagina_principale
 robots.txt wikipedia: https://it.wikipedia.org/robots.txt
+
+
+
+Inspired by: The-CodingSloth
+NLTK: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
