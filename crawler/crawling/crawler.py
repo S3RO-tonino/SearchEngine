@@ -153,14 +153,13 @@ def crawl(args):
 def crawl_bot():
     startingUrls = [
         'https://it.wikipedia.org/wiki/Pagina_principale',
-        'https://www.bbc.com/news/world'
     ]
-    start = time.time()
+    
     urlsToCrawl = Queue()
 
     for seedUrl in startingUrls:
         urlsToCrawl.put(seedUrl)
-       
+
     visitedUrls = set()
     CRAWL_LIMIT = 10
     crawlCount = [0]
@@ -171,7 +170,6 @@ def crawl_bot():
     index = {}
     webpageInfo = {}
     webpageIDCounter = {}
-
 
     # Start concurrent crawling w ThreadPoolExecutor
     NUM_WORKERS = 50
@@ -201,10 +199,10 @@ def crawl_bot():
         """
 
 
-    # Save data on CSV
+    # Indexing part - TODO Decidere se salvare i dati su DB o excel
 
-    
-        
+
+
 def main():
     crawl_bot()
 
