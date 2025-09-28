@@ -1,3 +1,4 @@
+/*
 * {
     margin: 0;
     padding: 0;
@@ -48,4 +49,253 @@ body {
 input[type="text"]:focus {
     box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
     border-color: #4285f4;
+}
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* ensures the body takes up at least the full viewport height */
+}
+
+a {
+    all: unset;
+    text-decoration: none;
+    /* no underline */
+}
+
+.top-section {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.app-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.profile-pic {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+}
+
+.left-side {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.right-side {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-side a,
+.right-side a {
+    color: #202124;
+    font-size: 0.8rem;
+}
+
+.middle-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+    gap: 1.2rem;
+}
+
+.search-label {
+    display: none;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+}
+.result-search-form {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+}
+
+.search-form-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: 1px solid #dfe1e5;
+    border-radius: 30px;
+    padding: 0.3rem 1.5rem;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-form input {
+    width: 27rem;
+    padding: 0.5rem;
+    border: none;
+    outline: none;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-form button {
+    border: 1px solid #f8f9fa;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    font-size: 0.9rem;
+}
+.search-icon-home {
+    width: 1rem;
+    height: 1rem;
+}
+.search-icon-result {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.mic,
+.camera {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.bottom-section {
+    margin-top: 15rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    font-size: 0.9em;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.bottom-left,
+.bottom-right {
+    display: flex;
+    gap: 1.8rem;
+}
+
+.bottom-middle {
+    padding-right: 10rem;
+}
+
+.bottom-section a {
+    color: #70757a;
+}
+
+.search-form button {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-family: Roboto, arial, sans-serif;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 1rem 1.5rem;
+    margin-top: 15rem;
+}
+
+.bottom-section a {
+    margin: 0 1rem;
+}
+
+.bottom-middle {
+    margin-right: 8rem;
+}
+
+.search-result-area {
+    display: flex;
+    padding-left: 1rem;
+    gap: 1rem;
+}
+.search-logo-home {
+    width: 20rem;
+}
+.search-logo-result {
+    width: 7rem;
+}
+
+#results {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+.result:hover {
+    cursor: pointer;
+}
+
+.result-description {
+    font-size: 0.8rem;
+    width: 50%;
+    color: #545454;
+}
+.result {
+    margin-bottom: 20px;
+}
+.result-title {
+    font-size: 18px;
+    color: #1a0dab;
+    text-decoration: none;
+}
+.result-title:hover {
+    text-decoration: underline;
+}
+.result-url {
+    font-size: 14px;
+    color: #006621;
+}
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+#pagination a {
+    color: #1a0dab;
+}
+
+#pagination a:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
