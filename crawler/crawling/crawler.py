@@ -6,6 +6,16 @@ from queue import Queue
 import threading
 from urllib.parse import *
 from concurrent.futures import ThreadPoolExecutor
+import csv
+import sys
+import os
+
+# Add the root directory to sys.path
+# This is to be able to import modules from other directories (indexing and serving) idk why...
+# any imports from indexing/serving need to happen under this
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from indexing.indexer import indexPage
 
 
 
@@ -39,7 +49,7 @@ def can_crawl(url):
     parsedURL = urlparse(url)
     robotsURL = f"{parsedURL.scheme}://{parsedURL.netloc}/robots.txt"
     
-    print(f"Checking robots.txt for: {robotsURL}")
+    print(f'Checking robots.txt for: {robotsURL}')
     time.sleep(random.uniform(1, 3))
 
     try:
@@ -97,13 +107,13 @@ def crawl(args):
     while not stopCrawl.is_set():
         try:
             currentUrl = queue.get(timeout=5)
-            print("Time to crawl: " + currentUrl)
+            print(f'Time to crawl: {currentUrl}')
         except Exception as e:
             break
 
         with lock:
             if crawlCount[0] >= CRAWL_LIMIT:
-                print("Crawl limit reached. Exiting...")
+                print('Crawl limit reached. Exiting...')
                 queue.queue.clear()
                 stopCrawl.set()
                 break
@@ -131,13 +141,23 @@ def crawl(args):
                 continue
             
             wp = bs(response.content, "html.parser") # parsing response to find new URLs
-            hyperlinksFound = wp.select("a[href]")
 
+            # Indexing content
+            indexedPage = indexPage(wp, currentUrl)
+            with lock:
+                for word in indexedPage['words']:
+                    if word not in index:
+                        index[word] = set()
+                    index[word].add(webpageIDCounter[0])
+                webpageInfo[webpageIDCounter[0]] = indexedPage
+                webpageIDCounter[0] += 1
+
+            hyperlinksFound = wp.select("a[href]")
             newUrls = parse_link(hyperlinksFound, currentUrl) # get and normalize the URLs from the 'a' html tags
 
             with lock:
                 for url in newUrls:
-                    # print(f'\n[DEBUG] URL found: {url}')
+                    # print(f'[DEBUG] URL found: {url}')
                     if url not in visitedUrls:
                         queue.put(url) # add the new url to the queue
                 crawlCount[0] += 1
@@ -152,7 +172,7 @@ def crawl(args):
 
 def crawl_bot():
     startingUrls = [
-        'https://it.wikipedia.org/wiki/Pagina_principale',
+        'https://en.wikipedia.org/wiki/Google',
     ]
     
     urlsToCrawl = Queue()
@@ -169,7 +189,7 @@ def crawl_bot():
     # indexing section
     index = {}
     webpageInfo = {}
-    webpageIDCounter = {}
+    webpageIDCounter = [0]
 
     # Start concurrent crawling w ThreadPoolExecutor
     NUM_WORKERS = 50
@@ -190,10 +210,17 @@ def crawl_bot():
     with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         for _ in range(NUM_WORKERS):
             executor.submit(crawl, args)
+    
+    with open('invertedIndex.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['word', 'docIDs']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for word, docIDs in index.items():
+            writer.writerow({'word': word, 'docIDs': list(docIDs)})
         
         
         """
-        print('\n\n\n')
+        print('')
         print('All URLs have been crawled.')
         print(f'CRAWL finished in: {round(time.time() - start, 3)} - CRAWLED: {crawlCount}')
         """
