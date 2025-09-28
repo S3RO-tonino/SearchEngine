@@ -211,6 +211,7 @@ def crawl_bot():
         for _ in range(NUM_WORKERS):
             executor.submit(crawl, args)
     
+    # Write index data on CSV
     with open('invertedIndex.csv', 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['word', 'docIDs']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
